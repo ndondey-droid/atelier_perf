@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier Performance des Paiements</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Slate, Indigo, Teal) -->
+    <!-- Application Structure Plan: A dashboard-style SPA with three main sections: 1) A central visual for the 'Core Vision', 2) A tabbed interface to separate 'Convergences' (static cards) from 'Divergences' (interactive table to compare departmental perspectives), and 3) A clear 'Next Steps' section. This structure is chosen to first establish common ground, then highlight key discussion points interactively, and finally provide a clear call to action for the workshop, which is more engaging than a linear report. -->
+    <!-- Visualization & Content Choices: Vision -> Goal: Inform -> Viz: HTML/CSS diagram -> Interaction: Hover effect -> Justification: Visual metaphor for balance. Convergences -> Goal: Organize -> Viz: HTML/CSS cards -> Justification: Modular and clear. Divergences -> Goal: Compare -> Viz: Interactive table -> Interaction: Tab selection -> Justification: Provides granular detail and contrasts views clearly, better for deep analysis than a chart. Next Steps -> Goal: Inform -> Viz: HTML/CSS timeline -> Justification: Clear and directive. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .tab-active {
+            border-bottom: 2px solid #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        .tab-inactive {
+            color: #6b7280;
+        }
+        .balance-item {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .balance-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+
+        <header class="text-center mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Feuille de Route Performance</h1>
+            <p class="mt-2 text-lg text-slate-600">Synthèse interactive pour notre atelier stratégique</p>
+        </header>
+
+        <main>
+            <section id="vision" class="mb-16">
+                <h2 class="text-2xl font-bold text-center text-slate-900 mb-8">1. Notre Vision de la Performance : Un Équilibre à Trois Forces</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="balance-item bg-white p-6 rounded-xl shadow-md border border-slate-200 flex flex-col items-center">
+                        <div class="text-4xl mb-4">🎯</div>
+                        <h3 class="text-xl font-semibold text-indigo-700">Conversion & Acceptation</h3>
+                        <p class="text-slate-600 mt-2">Maximiser le nombre de paiements réussis pour nos marchands.</p>
+                    </div>
+                    <div class="balance-item bg-white p-6 rounded-xl shadow-md border border-slate-200 flex flex-col items-center">
+                        <div class="text-4xl mb-4">🛡️</div>
+                        <h3 class="text-xl font-semibold text-indigo-700">Sécurité</h3>
+                        <p class="text-slate-600 mt-2">Limiter la fraude et les chargebacks pour protéger les revenus.</p>
+                    </div>
+                    <div class="balance-item bg-white p-6 rounded-xl shadow-md border border-slate-200 flex flex-col items-center">
+                        <div class="text-4xl mb-4">💰</div>
+                        <h3 class="text-xl font-semibold text-indigo-700">Rentabilité</h3>
+                        <p class="text-slate-600 mt-2">Optimiser les coûts de transaction pour une performance durable.</p>
+                    </div>
+                </div>
+                <div class="mt-8 text-center bg-indigo-50 border-l-4 border-indigo-500 text-indigo-800 p-4 rounded-r-lg max-w-3xl mx-auto">
+                    <p><span class="font-semibold">Point de divergence à noter :</span> Le curseur varie entre l'optimisation pure des coûts et une approche centrée sur la pédagogie et l'accompagnement client.</p>
+                </div>
+            </section>
+
+            <section id="exploration" class="mb-16 bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-slate-200">
+                <h2 class="text-2xl font-bold text-center text-slate-900 mb-8">2. Exploration des Retours : Convergences et Divergences</h2>
+                
+                <div class="border-b border-slate-200 mb-6">
+                    <nav class="-mb-px flex justify-center space-x-8" aria-label="Tabs">
+                        <button id="tab-convergences" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm tab-active">
+                            Nos Alignements (Convergences)
+                        </button>
+                        <button id="tab-divergences" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm tab-inactive">
+                            Nos Perspectives (Divergences)
+                        </button>
+                    </nav>
+                </div>
+
+                <div id="content-convergences">
+                    <p class="text-center text-slate-600 mb-8">Les points qui font consensus et constituent notre socle commun.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                            <h3 class="font-bold text-lg text-slate-800 mb-3">Nos Forces Actuelles</h3>
+                            <ul class="space-y-2 list-disc list-inside text-slate-700">
+                                <li><span class="font-semibold">Expertise Écosystème :</span> Connaissance fine du marché français (CB, BPCE).</li>
+                                <li><span class="font-semibold">Technologie Robuste :</span> Smart 3DS, Safe'R, et Fastpass sont des atouts clés.</li>
+                                <li><span class="font-semibold">Capital Humain :</span> Des équipes impliquées avec une forte culture data.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                            <h3 class="font-bold text-lg text-slate-800 mb-3">Tendances Futures Clés</h3>
+                            <ul class="space-y-2 list-disc list-inside text-slate-700">
+                                <li><span class="font-semibold">IA & Machine Learning :</span> Jugé capital pour le routage et la fraude.</li>
+                                <li><span class="font-semibold">Régulation :</span> L'évolution de DSP3/PSR est un enjeu majeur.</li>
+                                <li><span class="font-semibold">Nouveaux Paiements :</span> BNPL, Wallets, et Instant Payment à intégrer.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="content-divergences" class="hidden">
+                    <p class="text-center text-slate-600 mb-8">Chaque département a une vision unique sur les priorités. Voici les 4 points de divergence qui animeront notre débat.</p>
+                    
+                    <div class="overflow-x-auto rounded-lg shadow">
+                        <table class="min-w-full divide-y divide-slate-200">
+                            <thead class="bg-slate-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Thème</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Vision</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Départements Clés</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Question pour le Débat</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-slate-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900">Priorité Authentification</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">Maximiser l'acceptation via le Smart 3DS et les exemptions.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Produit, Tech, Commercial</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">Où placer le curseur entre la performance SCA et la maîtrise des risques ?</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900">Priorité Données</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">Comprendre les causes de refus pour être proactif.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Data, Opérations, Marketing</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">Faut-il prioriser la collecte de nouvelles données ou la valorisation de celles que l'on a déjà ?</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900">Priorité Partenariats</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">Investir dans la consolidation des relations existantes.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Relations Émetteurs, Commercial</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">Faut-il consolider nos acquis ou explorer de nouvelles opportunités de marché ?</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900">Priorité Innovation</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">Productiser les solutions vs. les co-construire.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Produit, Commercial, Stratégie</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">Faut-il privilégier les solutions "produit" clé en main ou les services d'accompagnement sur mesure ?</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="next-steps">
+                <h2 class="text-2xl font-bold text-center text-slate-900 mb-8">3. Prochaines Étapes : La Co-construction</h2>
+                <div class="mt-8 text-center bg-orange-50 border-l-4 border-orange-500 text-orange-800 p-4 rounded-r-lg max-w-3xl mx-auto">
+                    <p><span class="font-semibold">À garder à l'esprit :</span> Bien que nous soyons alignés sur la vision d'ensemble, chaque département a une priorité n°1 différente. C'est le principal défi de cet atelier : aligner nos priorités pour un impact maximal.</p>
+                </div>
+                <div class="max-w-3xl mx-auto">
+                    <ol class="relative border-l border-slate-300 mt-8">                  
+                        <li class="mb-10 ml-6">            
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-indigo-200 rounded-full -left-3 ring-8 ring-white">
+                                🤝
+                            </span>
+                            <h3 class="flex items-center mb-1 text-lg font-semibold text-slate-900">Travail en sous-groupes</h3>
+                            <p class="block mb-2 text-sm font-normal leading-none text-slate-500">Former des groupes pour explorer chaque axe de la performance.</p>
+                            <ul class="list-disc list-inside mt-2 space-y-2 text-slate-600">
+                                <li>**Groupe 1 : Offre & Expérience** (Produit, Commercial, Marketing)
+                                    <br>Mission : Identifier les fonctionnalités et les arguments qui créeront de la valeur pour le client.</li>
+                                <li>**Groupe 2 : Donnée & Technologie** (Data, Tech, Opérations)
+                                    <br>Mission : Identifier les leviers technologiques et les données qui nous permettront de surpasser le marché.</li>
+                                <li>**Groupe 3 : Fraude & Résilience** (Risque, Opérations, Produit)
+                                    <br>Mission : Anticiper les menaces pour garantir la sécurité et la stabilité de nos performances.</li>
+                            </ul>
+                        </li>
+                        <li class="mb-10 ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-indigo-200 rounded-full -left-3 ring-8 ring-white">
+                               🗳️
+                            </span>
+                            <h3 class="mb-1 text-lg font-semibold text-slate-900">Priorisation Collective</h3>
+                            <p class="block mb-2 text-sm font-normal leading-none text-slate-500">Vote pour les initiatives les plus impactantes</p>
+                            <p class="text-base font-normal text-slate-600">Aligner nos efforts en sélectionnant les projets qui apporteront le plus de valeur rapidement.</p>
+                        </li>
+                        <li class="ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-indigo-200 rounded-full -left-3 ring-8 ring-white">
+                                🚀
+                            </span>
+                            <h3 class="mb-1 text-lg font-semibold text-slate-900">Définition du Plan d'Action</h3>
+                             <p class="block mb-2 text-sm font-normal leading-none text-slate-500">Nomination de champions et définition des prochaines étapes</p>
+                            <p class="text-base font-normal text-slate-600">Transformer nos idées en actions concrètes avec des responsables clairs pour concrétiser notre feuille de route.</p>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const tabConvergences = document.getElementById('tab-convergences');
+        const tabDivergences = document.getElementById('tab-divergences');
+        const contentConvergences = document.getElementById('content-convergences');
+        const contentDivergences = document.getElementById('content-divergences');
+        
+        tabConvergences.addEventListener('click', () => {
+            tabConvergences.classList.add('tab-active');
+            tabConvergences.classList.remove('tab-inactive');
+            tabDivergences.classList.add('tab-inactive');
+            tabDivergences.classList.remove('tab-active');
+
+            contentConvergences.classList.remove('hidden');
+            contentDivergences.classList.add('hidden');
+        });
+
+        tabDivergences.addEventListener('click', () => {
+            tabDivergences.classList.add('tab-active');
+            tabDivergences.classList.remove('tab-inactive');
+            tabConvergences.classList.add('tab-inactive');
+            tabConvergences.classList.remove('tab-active');
+
+            contentDivergences.classList.remove('hidden');
+            contentConvergences.classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
